@@ -1555,15 +1555,27 @@ public class CSVParserTest {
     @Test
     public void testParseWithQuoteThrowsException() {
         final CSVFormat csvFormat = CSVFormat.DEFAULT.withQuote('\'');
-        assertThrows(IOException.class, () -> csvFormat.parse(new StringReader("'a,b,c','")).nextRecord());
-        assertThrows(IOException.class, () -> csvFormat.parse(new StringReader("'a,b,c'abc,xyz")).nextRecord());
-        assertThrows(IOException.class, () -> csvFormat.parse(new StringReader("'abc'a,b,c',xyz")).nextRecord());
+        
+        // Test the different invalid CSV strings
+        assertThrows(IOException.class, () -> parseWithException(csvFormat, "'a,b,c','"));
+        assertThrows(IOException.class, () -> parseWithException(csvFormat, "'a,b,c'abc,xyz"));
+        assertThrows(IOException.class, () -> parseWithException(csvFormat, "'abc'a,b,c',xyz"));
+    }
+
+    private void parseWithException(CSVFormat csvFormat, String input) throws IOException {
+        csvFormat.parse(new StringReader(input)).nextRecord();
     }
 
     @Test
     public void testParseWithQuoteWithEscape() throws IOException {
         final String source = "'a?,b?,c?d',xyz";
         final CSVFormat csvFormat = CSVFormat.DEFAULT.withQuote('\'').withEscape('?');
+        
+        // Refactored the lambda logic into a helper method
+        assertDoesNotThrow(() -> parseCsvAndVerify(csvFormat, source));
+    }
+
+    private void parseCsvAndVerify(CSVFormat csvFormat, String source) throws IOException {
         try (CSVParser csvParser = csvFormat.parse(new StringReader(source))) {
             final CSVRecord csvRecord = csvParser.nextRecord();
             assertEquals("a,b,c?d", csvRecord.get(0));
