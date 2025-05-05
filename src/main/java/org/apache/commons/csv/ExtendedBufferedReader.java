@@ -33,6 +33,7 @@ import java.nio.charset.CharsetEncoder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.UnsynchronizedBufferedReader;
+import java.util.logging.Logger;
 
 /**
  * A special buffered reader which supports sophisticated read access.
@@ -46,6 +47,9 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
     /** The last char returned */
     private int lastChar = UNDEFINED;
     private int lastCharMark = UNDEFINED;
+
+    private static final Logger logger = Logger.getLogger(ExtendedBufferedReader.class.getName());
+
 
     /** The count of EOLs (CR/LF/CRLF) seen so far */
     private long lineNumber;
@@ -254,7 +258,7 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
                 final int next = peek();
                 if (next == LF) {
                     int consumed = read();
-                    logger.debug("Consumed character: '{}'", (char) consumed);
+                    logger.fine("Consumed value: " + consumed);
                 }
             }
             if (current == EOF || current == LF || current == CR) {
