@@ -253,7 +253,8 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
             if (current == CR) {
                 final int next = peek();
                 if (next == LF) {
-                    consumeCharacter(); // Custom method that reads but discards the value
+                    int consumed = read();
+                    System.out.println("Consumed character: " + (char) consumed); // basic logging
                 }
             }
             if (current == EOF || current == LF || current == CR) {
@@ -262,11 +263,6 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
             buffer.append((char) current);
         }
         return buffer.toString();
-    }
-
-    // Helper method that reads but discards the value
-    private void consumeCharacter() throws IOException {
-        read();  // Consume the character, but don't use its value
     }
 
     @Override
