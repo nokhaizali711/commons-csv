@@ -254,7 +254,7 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
                 final int next = peek();
                 if (next == LF) {
                     int consumed = read();
-                    System.out.println("Consumed character: " + (char) consumed); // basic logging
+                    logger.debug("Consumed character: '{}'", (char) consumed);
                 }
             }
             if (current == EOF || current == LF || current == CR) {
